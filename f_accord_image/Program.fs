@@ -17,9 +17,8 @@ let readData filePath =
     |> Array.unzip
 
 let labels, observations = readData training
-
 let features = 28 * 28
-let classes = 10
+let ``class`` = 10
 
 let algorithm = 
     fun (svm: KernelSupportVectorMachine) 
@@ -29,23 +28,23 @@ let algorithm =
         strategy :> ISupportVectorMachineLearning
 
 let kernel = Linear()
-let svm = new MulticlassSupportVectorMachine(features, kernel, classes)
+let svm = new MulticlassSupportVectorMachine(features, kernel, ``class``)
 let learner = MulticlassSupportVectorLearning(svm, observations, labels)
 let config = SupportVectorMachineLearningConfigurationFunction(algorithm)
 learner.Algorithm <- config
 
 let error = learner.Run()
-
 printfn "Error: %f" error
 
 let validationLabels, validationObservations = readData validation
 
-let correct =
+let outputs =
     Array.zip validationLabels validationObservations 
     |> Array.map (fun (l, o) -> if l = svm.Compute(o) then 1. else 0.)
     |> Array.average
 
+printfn "Значение \t Предположнение "
 let view =
     Array.zip validationLabels validationObservations 
-    |> fun x -> x.[..20]
-    |> Array.iter (fun (l, o) -> printfn "Real: %i, predicted: %i" l (svm.Compute(o)))
+    |> fun x -> x.[..5]
+    |> Array.iter (fun (l, o) -> printfn "%i \t          %i" l (svm.Compute(o)))
