@@ -47,4 +47,4 @@ printfn "Значение \t Предположнение "
 let view =
     Array.zip validationLabels validationObservations 
     |> fun x -> x.[..5]
-    |> Array.iter (fun (l, o) -> printfn "%i \t          %i" l (svm.Compute(o)))
+    |> Array.iter (fun (l, o) -> printfn "%i \t         %i" l (svm.Compute(o)))
